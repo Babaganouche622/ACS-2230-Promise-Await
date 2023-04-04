@@ -7,14 +7,26 @@
  *    it runs? Run the code using `node challenge2.js` and verify that your
  *    expectation was correct.
  * 
+ * Should say "Hello there, Ducky" then "MAKE SCHOOL IS AWESOME!!!"
+ * This is correct, because the functions still call in order but wait the 1 second for the greet() to trigger.
+ * 
  * 
  * 2. What happens if greet() fails? Make it fail by changing 'name' to a number
  *    instead of a string. What happens? Does uppercaser() still run?
+ * 
+ * This will return a rejection message because the condition for greet() fails, 
+ * however uppercasser() will still run because that function has no errors.
+ * Interesting! The result was actually that nothing worked after the first function failed.
+ * Instead it was caught in the .catch() error handling.
  * 
  * 
  * 3. What happens if greet() succeeds and uppercaser() fails? Modify your code
  *    to achieve this result by changing the values of 'name' and 'my_str' and
  *    run the code again.
+ * 
+ * This fails after accomplishing greet(). This is because greet() is the baseline check, 
+ * if that fails the whole block will fail. However because greet() passed but uppercasser() failed 
+ * everything AFTER uppercasser() will also fail.
  * 
  * 
  * 4. Write a method that takes a string as input and returns the input string
@@ -27,6 +39,8 @@
  * 
  *    Make sure you only have one catch() block. If you have more than one,
  *    refactor your code so that you only have one. 
+ * 
+ * Done
  * 
  *******************************************************************************
  */
@@ -63,8 +77,21 @@ function uppercaser(str) {
     });
 }
 
+// Return a string with spaces between each character.
+function spacer(str) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      if (typeof str === 'string') {
+        resolve(str.split('').toString('').replaceAll(',', ' '))
+      } else {
+        reject('Argument to space must be a string')
+      }
+    }, 1000);
+  });
+}
+
 name = 'Ducky'
-my_str = 'Make School is Awesome!!!'
+my_str = 'Make school is awesome!!!'
 
 greet(name)
     .then((greetResult) => {
@@ -73,7 +100,12 @@ greet(name)
     })
     .then((uppercaserResult) => {
         console.log(uppercaserResult)
-    }).catch((err) => {
+        return spacer(name)
+    })
+    .then((spacerResults) => {
+      console.log(spacerResults)
+    })
+    .catch((err) => {
         console.log('Received an error!')
         console.log(err);
     });
